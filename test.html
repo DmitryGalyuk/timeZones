@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>test</title>
+	<script type="text/javascript">
+		function myFunc()
+		{
+			var func = this;
+
+			func.data = 42;
+
+			func.inc = function()
+			{
+				func.data++;
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="out">init</div>
+</body>
+<script type="text/javascript">
+	var empty = {};
+	var ff = myFunc.call(empty);
+	console.log(ff);
+	console.log(empty);
+	var f = new myFunc();
+	f.inc();
+	document.getElementById("out").innerText = f.data;
+
+</script>
+</html>
