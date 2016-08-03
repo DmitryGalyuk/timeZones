@@ -1,18 +1,79 @@
 <!DOCTYPE html>
-<html ng-app="timeZonesApp">
+<html ng-app="timeZonesApp" ng-controller="timeZonesController">
+
 <head>
 	<title>TimeZones Converter</title>
-	<script src="/bower_components/angular/angular.js"></script>
-	<script src="/bower_components/angular-route/angular-route.js"></script> 
-	<script src="/js/app.js"></script>
-	<script src="/js/timeZonesListModule.js"></script>
-	<script src="/js/currentTimeModule.js"></script>
-</head>
-<body>
-{{3+4}}
 
-	<div ng-view></div>
-	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+
+	<link rel="stylesheet" href="/css/xeditable.min.css">
+	<link rel="stylesheet" href="/css/slider.css">
+
+	<style type="text/css">
+		.ui-slider-vertical {
+			background: linear-gradient( {
+				{
+					sliderGradient.cssParamsString()
+				}
+			}
+			);
+		}
+	</style>
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.3.3/ui-bootstrap-tpls.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+
+	<script src="/js/lib/moment.js"></script>
+	<script src="/js/lib/moment-timezone-with-data-2010-2020.js"></script>
+	<script src="/js/lib/coolclock.js"></script>
+	<script src="/js/lib/xeditable.min.js"></script>
+
+	<script src="/js/app.js"></script>
+	<script src="/js/preferencesModule.js"></script>
+	<script src="/js/timeZonesModule.js"></script>
+	<script src="/js/timeZoneContolModule.js"></script>
+	<script src="/js/slider.js"></script>
+	<script src="/js/xeditable-delete.js"></script>
+</head>
+
+<body>
+
+	<input type="text" ng-model="search" uib-typeahead="zone for zone in allZoneNames | filter:$viewValue | limitTo:8" class="form-control" typeahead-on-select="onSelect($item, $model, $label, $event)"></input>
+
+	<button ng-click="showCurrentTime()">Now!</button>
+	<button ng-click="clearTimeZones()">Remove all</button>
+
+	<br />
+
+	<span ng-repeat="zone in zones | orderBy:'offsetInt'" style="display: inline-block; margin: 10px;">
+ 		<center>
+	 		<a href="#"
+	 			editable-text="zone.label" onaftersave="saveZones()"
+	 			xeditable-Delete delete-text="Delete" delete-callback="deleteZone('{{zone.zoneId}}');">{{zone.label}}</a>
+	 		<p>{{appTime.time() | toZoneTime:zone.zoneId:'HH:mm'}}</p>
+	 		<canvas
+	 			style="display: block;"
+	 			class="CoolClock:swissRail{{isDaytime(timeIn(appTime.time(), zone.zoneId))?'':'OnBlack'}}:30::{{zone.offsetInt}}"
+	 			id="clock{{zone.label}}">
+ 			</canvas>
+		</center>
+		 <span
+		 	ui-slider="sliderOptions"
+		 	data-min="0" data-max="24" data-step="0.5" use-decimals data-tick
+			ng-model="appTime.time"
+			ng-model-options="{ getterSetter: true }"
+			time-slider zone-id="{{zone.zoneId}}"
+			class="ui-slider ui-slider-vertical ui-widget-content ui-corner-all"
+			style="display: block; height: 300px; font-size: 14px;">
+		</span>
+	</span>
 
 </body>
+
 </html>
