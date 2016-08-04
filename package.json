@@ -1,17 +1,17 @@
 {
-  "name": "timeZones",
-  "version": "1.0.0",
-  "scripts": {
-    "start": "npm run lite",
-    "lite": "lite-server"
-  },
-  "license": "ISC",
-  "dependencies": {
-    "rxjs": "5.0.0-beta.2",
-    "zone.js": "0.6.12"
-  },
-  "devDependencies": {
-    "concurrently": "^2.0.0",
-    "lite-server": "^2.2.0"
-  }
+    "name": "timeZones",
+    "version": "1.0.0",
+    "scripts": {
+        /*"start": "npm run lite",
+        "lite": "lite-server"*/
+    },
+    "license": "ISC",
+    "dependencies": {
+        "rxjs": "5.0.0-beta.2",
+        "zone.js": "0.6.12"
+    },
+    "devDependencies": {
+        "concurrently": "^2.0.0",
+        "lite-server": "^2.2.0"
+    }
 }
