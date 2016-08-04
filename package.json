@@ -2,8 +2,8 @@
     "name": "timeZones",
     "version": "1.0.0",
     "scripts": {
-        /*"start": "npm run lite",
-        "lite": "lite-server"*/
+        "start": " ",
+        "lite": "lite-server"
     },
     "license": "ISC",
     "dependencies": {
