@@ -9,7 +9,7 @@
     "license": "ISC",
     "dependencies": {
       "connect":"*",
-      "serve-static":"serve-static"
+      "serve-static":"*"
     },
     "devDependencies": {
       "concurrently": "^2.0.0",
