@@ -8,9 +8,11 @@
     },
     "license": "ISC",
     "dependencies": {
-      "concurrently": "^2.0.0",
-      "lite-server": "^2.2.0"
+      "connect":"*",
+      "serve-static":"serve-static"
     },
     "devDependencies": {
+      "concurrently": "^2.0.0",
+      "lite-server": "^2.2.0"
     }
 }
