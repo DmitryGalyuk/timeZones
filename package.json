@@ -1,22 +1,17 @@
 {
-    "name": "timeZones",
-    "version": "1.0.0",
-    "main": "server.js",
-    "scripts": {
-        "start": "node server.js",
-        "lite": "lite-server"
-    },
-    "license": "ISC",
-    "dependencies": {
-        "connect": "*",
-        "serve-static": "*"
-    },
-    "devDependencies": {
-        "concurrently": "^2.0.0",
-        "lite-server": "^2.2.0"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/DmitryGalyuk/timeZones"
-    }
+  "name": "timeZones",
+  "description": "TimeZones converter",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+  },
+  "license": "ISC",
+  "dependencies": {
+    "jasmine": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DmitryGalyuk/timeZones"
+  }
 }
