@@ -22,15 +22,17 @@ main();
 function main() {
     generateLocationsFile();
     embedResources()
-    .then((mergedHtml) => {
-        var minifiedHtml = minify(mergedHtml, {minifyCSS: true, minifyJS: true});
-        saveToFile(minify(minifiedHtml), "./timeZones.html");
-    });
+        .then((mergedHtml) => {
+            var minifiedHtml = minify(mergedHtml, {
+                minifyCSS: true,
+                minifyJS: true
+            });
+            saveToFile(minify(minifiedHtml), "./timeZones.html");
+        });
 }
 
 function generateLocationsFile() {
     var countryCode2country = {};
-    var country2capital = {};
     var location2zone = {};
 
     csvToMap('countryInfo.txt', countriesHeader,
@@ -38,21 +40,14 @@ function generateLocationsFile() {
                 if (!row["ISO"].startsWith("#")) {
                     countryCode2country[row["ISO"]] = row["Country"];
                 }
-                if (row["Capital"]) {
-                    country2capital[row["Country"]] = row["Capital"];
-                }
             })
         .then(() => {
             csvToMap('cities15000.txt', citiesHeader,
                     (row) => {
-                        // if (row["population"] < 500000) return;
                         if (!row['countryCode']) return;
                         location2zone[countryCode2country[row['countryCode']] + ": " + row['asciiname']] = row['timezone'];
                     })
                 .then(() => {
-                    // console.log(location2zone);
-                    Object.keys(country2capital).forEach((country) => location2zone[country] = location2zone[country2capital[country]]);
-
                     saveToFile('var ' + locationsVarName + ' = ' + JSON.stringify(location2zone) + ';', "./cityZone.json");
                 });
         });
@@ -151,8 +146,6 @@ function saveToFile(content, filename) {
 function csvToMap(filename, columns, rowCallback) {
     return new Promise(function(resolve, reject) {
         try {
-            console.log(filename);
-            var linesRead = 0;
             fs.createReadStream(filename)
                 .pipe(csv({
                     delimiter: '\t',
@@ -162,13 +155,11 @@ function csvToMap(filename, columns, rowCallback) {
                 .on('data', function(data) {
                     try {
                         rowCallback(data);
-                        linesRead++;
                     } catch (e) {
                         die(e, reject);
                     }
                 })
                 .on('end', () => {
-                    console.log(filename + ": " + linesRead + " lines read");
                     resolve();
                 })
                 .on('error', (e) => {
