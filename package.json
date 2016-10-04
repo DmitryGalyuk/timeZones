@@ -3,7 +3,7 @@
   "description": "TimeZones converter",
   "version": "1.0.0",
   "main": "builld.js",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "fast-csv": "*",
     "jsdom": "*"
