@@ -7,7 +7,7 @@ var locationsVarName = 'locationZone';
 var fs = require("fs");
 var jsdom = require("jsdom");
 var csv = require('fast-csv');
-let moment = require("moment-timezone");
+let minify = require('html-minifier').minify;
 
 var citiesHeader = ['geonameid', 'name', 'asciiname', 'alternatenames', 'latitude', 'longitude',
     'featureClass', 'featureCode', 'countryCode', 'cc2', 'admin1Code', 'admin2Code', 'admin3Code', 'admin4Code',
@@ -21,7 +21,11 @@ main();
 
 function main() {
     generateLocationsFile();
-    embedResources();
+    embedResources()
+    .then((mergedHtml) => {
+        var minifiedHtml = minify(mergedHtml, {minifyCSS: true, minifyJS: true});
+        saveToFile(minify(minifiedHtml), "./timeZones.html");
+    });
 }
 
 function generateLocationsFile() {
@@ -59,16 +63,17 @@ function embedResources() {
     var serializeDocument = require("jsdom").serializeDocument;
     var indexHtml = fs.readFileSync("./index.html", "utf8");
 
-    jsdom.env(
-        indexHtml,
-        function(err, window) {
-            var stylePromises = processStylesAsync(window.document);
-            var scriptPromises = processScriptsAsync(window.document);
-            Promise.all(stylePromises.concat(scriptPromises)).then(function() {
-                saveToFile(window.document.documentElement.outerHTML, "./timeZones.html");
-            });
-        }
-    );
+    return new Promise((resolve, reject) => {
+        jsdom.env(
+            indexHtml,
+            function(err, window) {
+                var stylePromises = processStylesAsync(window.document);
+                var scriptPromises = processScriptsAsync(window.document);
+                Promise.all(stylePromises.concat(scriptPromises)).then(() => resolve(window.document.documentElement.outerHTML));
+            }
+        );
+    });
+
 
     function processStylesAsync(document) {
         return Array.prototype.map.call(document.getElementsByTagName("link"), function(element) {
