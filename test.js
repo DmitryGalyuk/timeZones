@@ -1,4 +1,17 @@
-var fs = require('fs');
-var posix = require('posix');
-posix.chroot('./');
-console.log(fs.readFileSync('./js/../../../../../../../../../../../../../../../../../../etc/passwd','utf8'));
+/*jslint node: true */
+/*jslint esversion: 6 */
+'use strict';
+
+function* generator() {
+  let a = yield;
+
+  return 2 * a;
+}
+
+let iterator = generator();
+
+iterator.next();
+
+console.log(iterator.next(2));
+console.log(iterator.next(2));
+console.log(iterator.next(2));

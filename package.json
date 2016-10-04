@@ -2,13 +2,11 @@
   "name": "timeZones",
   "description": "TimeZones converter",
   "version": "1.0.0",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
+  "main": "builld.js",
   "license": "ISC",
   "dependencies": {
-    "jasmine": "*"
+    "fast-csv": "*",
+    "jsdom": "*"
   },
   "repository": {
     "type": "git",
