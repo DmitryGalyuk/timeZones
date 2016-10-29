@@ -10,7 +10,7 @@
 
 
 	timeZonesApp.controller('timeZonesController', [
-		'$scope', 'preferencesService', '$interval', '$timeout', 'timeZonesService', 'appTime',
+		'$scope', 'preferencesService', '$interval', '$timeout', 'timeZonesService', 'appTime'
 		function($scope, preferencesService, $interval, $timeout, timeZonesService, appTime) {
 
 			$scope.clearTimeZones = () => preferencesService._clear();

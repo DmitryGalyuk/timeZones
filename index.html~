@@ -54,7 +54,9 @@
 		typeahead-on-select="onSelect($item, $model, $label, $event)"
 	/>
 
-
+<!--
+	<input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="appTime.time()" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+-->
 	<button ng-click="showCurrentTime()">Now!</button>
 	<button ng-click="clearTimeZones()">Remove all</button>
 

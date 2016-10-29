@@ -1,0 +1,15 @@
+{
+  "libs": [
+    "browser",
+  ],
+  "plugins": {
+	"node": {},
+	"angular": "./"
+	"modules: {},
+	
+    }
+  }
+
+
+
+
