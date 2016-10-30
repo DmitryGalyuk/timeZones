@@ -7,7 +7,8 @@
   "dependencies": {
     "fast-csv": "*",
     "html-minifier": "*",
-    "jsdom": "*"
+    "jsdom": "*",
+	"ng-flat-datepicker": "*"
   },
   "repository": {
     "type": "git",

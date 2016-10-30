@@ -4,9 +4,11 @@
 <head>
 	<title>TimeZones Converter</title>
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+		integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+		crossorigin="anonymous">
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-
+	<link rel="stylesheet " href="css/ng-flat-datepicker.min.css">
 	<link rel="stylesheet" href="css/xeditable.min.css">
 	<link rel="stylesheet" href="css/slider.css">
 	<link rel="icon" href="clock.ico" />
@@ -15,18 +17,25 @@
 		.selected {
 			border: 1px solid grey;
 		}
-
+		
 		.blinked {
 			background-color: LightGoldenRodYellow;
 		}
-
+		
 		.ui-slider-vertical {
-			background: linear-gradient({{ sliderGradient.cssParamsString() }});
+			background: linear-gradient( {
+				{
+					sliderGradient.cssParamsString()
+				}
+			}
+			);
 		}
 	</style>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+		integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+		crossorigin="anonymous"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.3.3/ui-bootstrap-tpls.min.js"></script>
@@ -36,6 +45,7 @@
 	<script src="js/lib/moment-timezone-with-data-2010-2020.js"></script>
 	<script src="js/lib/coolclock.js"></script>
 	<script src="js/lib/xeditable.min.js"></script>
+	<script src="js/lib/ng-flat-datepicker.min.js"></script>
 
 	<script src="cityZone.json"></script>
 	<script src="js/app.js"></script>
@@ -46,25 +56,32 @@
 	<script src="js/xeditable-delete.js"></script>
 </head>
 
+
+</html>
+
 <body>
-	<input type="text" 
-		ng-model="search" 
-		uib-typeahead="zone for zone in locations | filter:$viewValue | limitTo:25" 
-		class="form-control" 
-		typeahead-on-select="onSelect($item, $model, $label, $event)"
-	/>
+	<span>
+		<button ng-flat-datepicker ng-model="appTime.date" ng-model-options="{ getterSetter: true }"
+		datepicker-config="datepickerConfig" 
+		ng-change='stopTicking()'>{{appTime.date()._d | date:'MMMM d, yyyy'}}</button>
+
+		<button ng-click="showCurrentTime()">Now!</button>
+
+		<input type="text" 
+			ng-model="search" 
+			uib-typeahead="zone for zone in locations | filter:$viewValue | limitTo:25" 
+			typeahead-on-select="onSelect($item, $model, $label, $event)"
+   			placeholder="Add city"
+		/>
+
+		<button ng-click="clearTimeZones()">Remove all</button>
+	</span>
 
 
-	<button ng-click="showCurrentTime()">Now!</button>
-	<button ng-click="clearTimeZones()">Remove all</button>
-
-	{{appTime.time()}}
 	<br />
 
-	<span ng-repeat="zone in zones | orderBy:'offsetInt'"
-		class="list-inline"
-		style="display: inline-block; margin: 10px;"
-		ng-class="{selected : zone.zoneId === userZone.zoneId, blinked:zone.zoneId === blinkedZone.zoneId}" >
+	<span ng-repeat="zone in zones | orderBy:'offsetInt'" class="list-inline" style="display: inline-block; margin: 10px;"
+		ng-class="{selected : zone.zoneId === userZone.zoneId, blinked:zone.zoneId === blinkedZone.zoneId}">
 		<center>
 	 		<a href="#"
 	 			editable-text="zone.label" onaftersave="saveZones()"
@@ -86,5 +103,3 @@
 		</span>
 	</span>
 </body>
-
-</html>
