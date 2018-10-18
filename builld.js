@@ -23,7 +23,7 @@ function main() {
 				minifyCSS: true,
 				minifyJS: true
 			});
-			saveToFile(minify(minifiedHtml), './timeZones.html');
+			saveToFile(minify(minifiedHtml), './index.html');
 		});
 }
 
@@ -52,7 +52,7 @@ function generateLocationsFile() {
 
 function embedResources() {
 //	var serializeDocument = require('jsdom').serializeDocument;
-	var indexHtml = fs.readFileSync('./index.html', 'utf8');
+	var indexHtml = fs.readFileSync('./index_dev.html', 'utf8');
 
 	return new Promise((resolve, reject) => {
 		jsdom.env(
