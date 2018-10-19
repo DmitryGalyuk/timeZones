@@ -318,7 +318,7 @@ return e=L(e),this[e+"s"]()}function Kn(e){return function(){return this._data[e
 	<span>
 		<button ng-flat-datepicker="" ng-model="appTime.date" ng-model-options="{ getterSetter: true }" datepicker-config="datepickerConfig" ng-change="stopTicking()">{{appTime.date()._d | date:'MMMM d, yyyy'}}</button>
 
-		<button ng-click="showCurrentTime()">Now!</button>
+		<button ng-click="showCurrentTime()">Now</button>
 
 		<input type="text" ng-model="search" uib-typeahead="zone for zone in locations | filter:$viewValue | limitTo:25" typeahead-on-select="onSelect($item, $model, $label, $event)" placeholder="Add city">
 
