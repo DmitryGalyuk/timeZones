@@ -5,6 +5,7 @@ var fs = require('fs');
 var jsdom = require('jsdom');
 var csv = require('fast-csv');
 var minify = require('html-minifier').minify;
+const pagesFolder = './docs';
 
 var citiesHeader = ['geonameid', 'name', 'asciiname', 'alternatenames', 'latitude', 'longitude',
 	'featureClass', 'featureCode', 'countryCode', 'cc2', 'admin1Code', 'admin2Code', 'admin3Code', 'admin4Code',
@@ -16,6 +17,9 @@ var countriesHeader = ['ISO', 'ISO3', 'ISO-Numeric', 'fips', 'Country', 'Capital
 ];
 
 function main() {
+	cleanResultsFolder();
+	copyFilesStartingWith('favicon');
+	copyFilesStartingWith('CNAME');
 	generateLocationsFile();
 	embedResources()
 		.then((mergedHtml) => {
@@ -23,8 +27,29 @@ function main() {
 				minifyCSS: true,
 				minifyJS: true
 			});
-			saveToFile(minify(minifiedHtml), './index.html');
+			saveToFile(minifiedHtml, pagesFolder+'/index.html');
 		});
+}
+
+function copyFilesStartingWith(startsWith) {
+	fs.readdir('.', function (err, files) {
+		files.forEach((file) => {
+			if (file.startsWith(startsWith)) {
+				fs.copyFile('./' + file, pagesFolder + '/' + file, (err) => {
+				if (err)
+					throw err;
+				});
+			}
+		});
+	});
+}
+
+function cleanResultsFolder() {
+	fs.readdir(pagesFolder, (err, files) => {
+		files.forEach((file) => {
+			fs.unlink(pagesFolder + '/' + file);
+		});
+	});
 }
 
 function generateLocationsFile() {
@@ -52,7 +77,7 @@ function generateLocationsFile() {
 
 function embedResources() {
 //	var serializeDocument = require('jsdom').serializeDocument;
-	var indexHtml = fs.readFileSync('./index_dev.html', 'utf8');
+	var indexHtml = fs.readFileSync('./index.html', 'utf8');
 
 	return new Promise((resolve, reject) => {
 		jsdom.env(
