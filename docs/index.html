@@ -116,6 +116,7 @@ return e=L(e),this[e+"s"]()}function Kn(e){return function(){return this._data[e
 			$scope.isDaytime = timeZonesService.isDaytime;
 			$scope.timeIn = timeZonesService.timeIn;
 			$scope.datepickerConfig = {dateFormat: 'MMM DD, YYYY',allowFuture:true,minYear:'minDate',maxYear:'maxDate'};
+			$scope.comparatorTimezone = (zone) => $scope.timeIn($scope.appTime._time, zone.zoneId)._d.toISOString();
 
 			$scope.locations = timeZonesService.getLocations();
 			// $scope.allZoneNames = timeZonesService.getAllTimeZoneNames();
@@ -316,7 +317,7 @@ return e=L(e),this[e+"s"]()}function Kn(e){return function(){return this._data[e
 
 
 	<span>
-		<button ng-flat-datepicker="" ng-model="appTime.date" ng-model-options="{ getterSetter: true }" datepicker-config="datepickerConfig" ng-change="stopTicking()">{{appTime.date()._d | date:'MMMM d, yyyy'}}</button>
+		<button ng-flat-datepicker="" ng-model="appTime.date" ng-model-options="{ getterSetter: true }" datepicker-config="datepickerConfig" ng-click="stopTicking()" ng-change="stopTicking()">{{appTime.date()._d | date:'MMMM d, yyyy'}}</button>
 
 		<button ng-click="showCurrentTime()">Now</button>
 
@@ -328,7 +329,7 @@ return e=L(e),this[e+"s"]()}function Kn(e){return function(){return this._data[e
 
 	<br>
 
-	<span ng-repeat="zone in zones | orderBy:'offsetInt'" class="list-inline" style="display:inline-block;margin:10px" ng-class="{selected : zone.zoneId === userZone.zoneId, blinked:zone.zoneId === blinkedZone.zoneId}">
+	<span ng-repeat="zone in zones | orderBy:comparatorTimezone" class="list-inline" style="display:inline-block;margin:10px" ng-class="{selected : zone.zoneId === userZone.zoneId, blinked:zone.zoneId === blinkedZone.zoneId}">
 		<center>
 	 		<a href="#" editable-text="zone.label" onaftersave="saveZones()" xeditable-delete="" delete-text="Delete" delete-callback="deleteZone('{{zone.zoneId}}');">{{zone.label}}</a>
 	 		<p>{{appTime.time() | toZoneTime:zone.zoneId:'HH:mm'}}</p>
