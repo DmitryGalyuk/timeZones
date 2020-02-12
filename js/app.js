@@ -24,6 +24,7 @@
 			$scope.isDaytime = timeZonesService.isDaytime;
 			$scope.timeIn = timeZonesService.timeIn;
 			$scope.datepickerConfig = {dateFormat: 'MMM DD, YYYY',allowFuture:true,minYear:'minDate',maxYear:'maxDate'};
+			$scope.comparatorTimezone = (zone) => $scope.timeIn($scope.appTime._time, zone.zoneId)._d.toISOString();
 
 			$scope.locations = timeZonesService.getLocations();
 			// $scope.allZoneNames = timeZonesService.getAllTimeZoneNames();
