@@ -64,7 +64,8 @@
 <body>
 	<span>
 		<button ng-flat-datepicker ng-model="appTime.date" ng-model-options="{ getterSetter: true }"
-		datepicker-config="datepickerConfig" 
+		datepicker-config="datepickerConfig"
+		ng-click="stopTicking()"
 		ng-change='stopTicking()'>{{appTime.date()._d | date:'MMMM d, yyyy'}}</button>
 
 		<button ng-click="showCurrentTime()">Now</button>
@@ -82,7 +83,7 @@
 
 	<br />
 
-	<span ng-repeat="zone in zones | orderBy:'offsetInt'" class="list-inline" style="display: inline-block; margin: 10px;"
+	<span ng-repeat="zone in zones | orderBy:comparatorTimezone" class="list-inline" style="display: inline-block; margin: 10px;"
 		ng-class="{selected : zone.zoneId === userZone.zoneId, blinked:zone.zoneId === blinkedZone.zoneId}">
 		<center>
 	 		<a href="#"
