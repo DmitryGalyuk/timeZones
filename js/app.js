@@ -143,13 +143,6 @@
 			}
 
 			function configureSlider() {
-				$scope.sliderOptions = {
-					orientation: 'vertical',
-					start: function() {
-						$scope.stopTicking();
-					}
-				};
-
 				$scope.sliderGradient = {
 					points: [{
 						color: (function() {

@@ -215,7 +215,7 @@ angular.module('ui.slider', []).value('uiSliderConfig',{}).directive('uiSlider',
                     element.appendTo(wrapper);
 
                     for (var i = 0, tickLabel = min; i <= total; i++, tickLabel+=step) {
-                        var position = ((i / total) * 100) + '%';
+                        var position = ((i / (total+1)) * 100) + '%';
                         var tick = $("<div/>");
                         tick.addClass("ui-slider-label-ticks");
                         tick.css(tickPosition, position);

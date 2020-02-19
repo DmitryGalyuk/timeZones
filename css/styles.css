@@ -1,0 +1,89 @@
+.selected {
+    border: 1px solid grey;
+}
+
+.blinked {
+    background-color: LightGoldenRodYellow;
+}
+
+.allZonesContainer {
+    display: flex;
+}
+
+.zoneContainer {
+    display: grid;
+    gap: 0.2em 1em;
+    margin: 1em;
+}
+
+.zoneName {
+    grid-area: areaName;
+}
+
+.zoneTime {
+    grid-area: areaTime;
+    text-align: center;
+}
+
+.zoneClock {
+    grid-area: areaClock;
+}
+
+.zoneSliderContainerVertical .zoneSliderContainerHorizontal {
+    grid-area: areaSlider;
+    font-size: 14px;
+    margin: auto;
+}
+
+/* small screen */
+@media screen and (max-width: 750px) {
+    .allZonesContainer {
+        flex-direction: column;
+    }
+
+    .zoneContainer {
+        grid-template-columns: max-content auto;
+        grid-template-areas:
+            'areaTime areaName'
+            'areaClock areaSlider';
+    }
+
+    .zoneSliderContainerVertical {
+        display: none;
+    }
+
+    .zoneSliderContainerHorizontal {
+        display: block;
+    }
+}
+
+/* big screen */
+@media screen and (min-width: 750px) {
+    .allZonesContainer {
+        flex-direction: row;
+    }
+
+    .zoneContainer {
+        grid-template-areas: 'areaName''areaTime''areaClock''areaSlider';
+        text-align: center;
+    }
+
+    .zoneSliderContainerVertical {
+        display: block;
+    }
+
+    .zoneSliderContainerHorizontal {
+        display: none;
+    }
+
+}
+
+.editable-click, a.editable-click {
+        text-decoration: underline #428bca dashed;
+        border-bottom: none;
+        text-decoration-thickness: 1px;
+    }
+
+.ng-flat-datepicker table tbody {
+    width: 290px;
+}
