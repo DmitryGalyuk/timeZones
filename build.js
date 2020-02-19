@@ -21,7 +21,9 @@ var countriesHeader = ['ISO', 'ISO3', 'ISO-Numeric', 'fips', 'Country', 'Capital
 ];
 
 async function main() {
-
+	fs.copyFile('cities15000.zip', 'cities15000.zip.bak', ()=>{});
+	fs.copyFile('cities15000.txt', 'cities15000.txt.bak', ()=>{});
+	
 	await downloadCitiesZipAsync();
 	await unzipCitiesAsync();
 
