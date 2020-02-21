@@ -63,7 +63,7 @@
 				var zoneToAdd = timeZonesService.getLocationZone($label);
 				zoneToAdd.label = $label;
 				$scope.search = '';
-				if ($scope.zones.find((zone) => zone.label === zoneToAdd.label)) {
+				if ($scope.zones.find((zone) => zone.zoneId === zoneToAdd.zoneId)) {
 					blinkZone(zoneToAdd);
 					return;
 				}
