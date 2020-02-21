@@ -55,20 +55,20 @@
 </html>
 
 <body>
-	<span>
+	<span class="topButtonsContainer">
 		<button ng-flat-datepicker ng-model="appTime.date" ng-model-options="{ getterSetter: true }"
 			datepicker-config="datepickerConfig" ng-click="stopTicking()"
-			ng-change='stopTicking()'>{{appTime.date()._d | date:'MMMM d, yyyy'}}</button>
+			ng-change='stopTicking()'
+			class="topButton">{{appTime.date()._d | date:'MMMM d, yyyy'}}</button>
 
 		<button ng-click="showCurrentTime()">Now</button>
 
 		<input type="text" ng-model="search" uib-typeahead="zone for zone in locations | filter:$viewValue | limitTo:25"
-			typeahead-on-select="onSelect($item, $model, $label, $event)" placeholder="Add city" />
+			typeahead-on-select="onSelect($item, $model, $label, $event)" placeholder="Add city"
+			class="topButton" />
 
-		<button ng-click="clearTimeZones()">Remove all</button>
+		<button ng-click="clearTimeZones()" class="topButton">Remove all</button>
 	</span>
-
-	<br />
 
 	<div class="allZonesContainer">
 		<div ng-repeat="zone in zones | orderBy:comparatorTimezone" class="zoneContainer"
@@ -89,7 +89,7 @@
 				</div>
 			</div>
 			<div class="zoneSliderContainerHorizontal">
-				<div ui-slider="{orientation: 'horizontal'}" data-min="0" data-max="24" data-step="0.5" use-decimals
+				<div ui-slider="{orientation: 'horizontal'}" data-min="0" data-max="24" data-step="2" use-decimals
 					data-tick ng-model="appTime.time" ng-model-options="{ getterSetter: true }" time-slider
 					zone-id="{{zone.zoneId}}" class="ui-slider ui-slider-horizontal ui-widget-content ui-corner-all"
 					ng-change="stopTicking()">

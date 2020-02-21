@@ -87,3 +87,11 @@
 .ng-flat-datepicker table tbody {
     width: 290px;
 }
+
+.topButtonsContainer .topButton {
+    margin-bottom: 10px;
+}
+
+.topButtonsContainer {
+    margin-bottom: 10px;
+}
