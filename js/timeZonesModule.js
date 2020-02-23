@@ -26,7 +26,7 @@
 				},
 				date: function(newDate) {
 					if (arguments.length) {
-						this.setDateTime(moment(newDate), this._time);
+						this.setDateTime(moment(new Date(newDate)), this._time);
 					} else {
 						return this._time;
 					}
