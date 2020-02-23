@@ -1,6 +1,6 @@
 /*jslint esversion: 6 */
 
-(function(angular) {
+(function (angular) {
 	'use strict';
 
 	var timeZonesApp = angular.module('timeZonesApp', [
@@ -11,10 +11,10 @@
 
 	timeZonesApp.controller('timeZonesController', [
 		'$scope', 'preferencesService', '$interval', '$timeout', 'timeZonesService', 'appTime',
-		function($scope, preferencesService, $interval, $timeout, timeZonesService, appTime) {
+		function ($scope, preferencesService, $interval, $timeout, timeZonesService, appTime) {
 
-			$scope.clearTimeZones = () => preferencesService._clear();
-			$scope.saveZones = () => preferencesService.save($scope.zones);
+			$scope.clearTimeZones = removeAllZones;
+			$scope.saveZones = saveZones;
 			$scope.deleteZone = deleteZone;
 			$scope.startTicking = startTicking;
 			$scope.stopTicking = stopTicking;
@@ -22,37 +22,143 @@
 			$scope.onSelect = onZoneSelectedFromList;
 			$scope.showCurrentTime = () => $scope.startTicking();
 			$scope.isDaytime = timeZonesService.isDaytime;
+			$scope.appTime = appTime;
 			$scope.timeIn = timeZonesService.timeIn;
 			$scope.comparatorTimezone = (zone) => $scope.timeIn($scope.appTime._time, zone.zoneId)._d.toISOString();
-			$scope.datepickerConfig = {dateFormat: 'MMM DD, YYYY',allowFuture:true};
+			$scope.datepickerConfig = { dateFormat: 'MMM DD, YYYY', allowFuture: true };
+			$scope.zonesChanged = zonesChanged;
 
 			$scope.locations = timeZonesService.getLocations();
-			// $scope.allZoneNames = timeZonesService.getAllTimeZoneNames();
-			$scope.zones = timeZonesService.loadUserZones();
+
+			$scope.zones = assembleTimeZones();
+
 			ensureCurrentZoneIsVisible();
 			$scope.userZone = calculateUserZone();
-			$scope.appTime = appTime;
 			configureSlider();
 			configureWatchControl();
+			$scope.isTicking = false;
 			$scope.startTicking();
 
+			$scope.zones.onChange = zonesChanged;
+			addTimeZonesFromHash();
+
+			$scope.manualHashChange = false;
+			window.addEventListener('hashchange', addTimeZonesFromHash);
+
+			zonesChanged();
+
+
+			function zonesChanged() {
+				if ($scope.manualHashChange) {
+					$scope.manualHashChange = false;
+					return;
+				}
+
+				var state = {};
+				if (!$scope.isTicking) {
+					state.time = $scope.appTime.time();
+				}
+				state.zones = $scope.zones.map(
+					(zone) => {
+						var z = {};
+						z.id = zone.zoneId;
+						z.name = zone.label;
+						return z;
+					}
+				);
+				saveToHash(btoa(JSON.stringify(state)));
+			}
+
+			function assembleTimeZones() {
+				var zones = timeZonesService.loadUserZones();
+
+				var proxy = addOnChangeEvent(zones);
+				return proxy;
+			}
+
+			function saveToHash(data) {
+				$scope.manualHashChange = true;
+				location.hash = data;
+			}
+			
+			function addTimeZonesFromHash() {
+				if (!location.hash) return;
+
+				const newHash = arguments[0] 
+					? arguments[0].newURL.substr(arguments[0].newURL.indexOf('#')+1)
+					: location.hash.substr(1);
+				const urlData = JSON.parse(atob(newHash));
+				if (!urlData || !urlData.zones || !urlData.zones.length) return;
+
+				if (!!urlData.time) {
+					$scope.appTime.time($scope.timeIn(urlData.time, 'UTC'));
+					stopTicking();
+				}
+
+				addZone(urlData.zones
+					.filter((zoneFromUrl) => $scope.zones.findIndex((zone) => zone.zoneId == zoneFromUrl.id) < 0)
+					.map((filteredZone) => timeZonesService.getZoneByName(filteredZone.id))
+				);
+
+			}
+
+			function addOnChangeEvent(o) {
+				var proxy = new Proxy(o, {
+					set: function (target, prop, value) {
+						target[prop] = value;
+						if (target.onChange && prop != 'length' && prop != 'onChange') {
+							Reflect.apply(target.onChange, target, value);
+						}
+						return true;
+					}
+				});
+				return proxy;
+			}
+
+			function saveZones() {
+				zonesChanged(); 
+				preferencesService.save($scope.zones);
+			}
+			
 			function deleteZone(zoneId) {
 				var zoneIndex = $scope.zones.findIndex((zone) => zone.zoneId === zoneId);
-				if (zoneIndex !== undefined) {
+				if (zoneIndex >= 0) {
 					$scope.zones.splice(zoneIndex, 1);
 				}
-				$scope.saveZones();
+				saveZones();
+			}
+
+			function removeAllZones() {
+				preferencesService._clear()
+				$scope.zones = addOnChangeEvent([]);
+				$scope.zones.onChange = zonesChanged;
+				addZone(timeZonesService.getDefaultZone());
+				saveZones();
+				$scope.startTicking();
+			}
+
+			function addZone(zone) {
+				if(Array.isArray(zone)) {
+					zone.forEach((z)=>$scope.zones.push(z));
+				}
+				else {
+					$scope.zones.push(zone);
+				}
+				saveZones();
+				$timeout(window.CoolClock.findAndCreateClocks, 0);
 			}
 
 			function startTicking() {
+				$scope.isTicking = true;
 				if (angular.isDefined($scope._intervalPromise))
 					return;
-				$scope._intervalPromise = $interval(function() {
+				$scope._intervalPromise = $interval(function () {
 					$scope.appTime.setDateTime();
 				}, 1000);
 			}
 
 			function stopTicking() {
+				$scope.isTicking = false;
 				if (angular.isDefined($scope._intervalPromise)) {
 					$interval.cancel($scope._intervalPromise);
 					$scope._intervalPromise = undefined;
@@ -67,9 +173,7 @@
 					blinkZone(zoneToAdd);
 					return;
 				}
-				$scope.zones.push(zoneToAdd);
-				preferencesService.save($scope.zones);
-				$timeout(window.CoolClock.findAndCreateClocks, 0);
+				addZone(zoneToAdd);
 			}
 
 			function blinkZone(zone) {
@@ -78,13 +182,13 @@
 			}
 
 			function configureWatchControl() {
-				window.CoolClock.prototype.refreshDisplay = function() {
+				window.CoolClock.prototype.refreshDisplay = function () {
 					this.render(
 						$scope.appTime.time().hours() + Math.floor(this.gmtOffset),
 						$scope.appTime.time().minutes() + this.gmtOffset % 1 * 60,
 						$scope.appTime.time().seconds());
 				};
-				window.CoolClock.prototype.nextTick = function() {};
+				window.CoolClock.prototype.nextTick = function () { };
 
 				window.CoolClock.config.skins.swissRailOnBlack = {
 					outerBorder: {
@@ -145,14 +249,14 @@
 			function configureSlider() {
 				$scope.sliderGradient = {
 					points: [{
-						color: (function() {
+						color: (function () {
 							var brightnesPercent = Math.round(timeZonesService.daytime.start / 24 * 255);
 							var colorstring = [brightnesPercent, brightnesPercent, brightnesPercent].join(',');
 							return 'rgb(' + colorstring + ')';
 						})(),
 						position: 0
 					}, {
-						color: (function() {
+						color: (function () {
 							var brightnesPercent = Math.round(timeZonesService.daytime.start / 24 * 255);
 							var colorstring = [brightnesPercent, brightnesPercent, brightnesPercent].join(',');
 							return 'rgb(' + colorstring + ')';
@@ -171,11 +275,11 @@
 						color: 'rgb(0,0,0)',
 						position: 100 - timeZonesService.daytime.midNight / 24 * 100
 					}],
-					cssParamsString: function() {
-						$scope.sliderGradient.points.sort(function(a, b) {
+					cssParamsString: function () {
+						$scope.sliderGradient.points.sort(function (a, b) {
 							return a.position - b.position;
 						});
-						return $scope.sliderGradient.points.map(function(point) {
+						return $scope.sliderGradient.points.map(function (point) {
 							return point.color + ' ' + point.position + '%';
 						}).join(', ');
 
@@ -186,7 +290,7 @@
 			function ensureCurrentZoneIsVisible() {
 				var currentZone = timeZonesService.getDefaultZone();
 				if (!$scope.zones.find((zone) => zone.offsetInt == currentZone.offsetInt)) {
-					$scope.zones.push(currentZone);
+					addZone(currentZone);
 				}
 			}
 

@@ -4,6 +4,7 @@
 <head>
 	<title>TimeZones Converter</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
 		integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -58,7 +59,7 @@
 	<span class="topButtonsContainer">
 		<button ng-flat-datepicker ng-model="appTime.date" ng-model-options="{ getterSetter: true }"
 			datepicker-config="datepickerConfig" ng-click="stopTicking()"
-			ng-change='stopTicking()'
+			ng-change='zonesChanged()'
 			class="topButton">{{appTime.date()._d | date:'MMMM d, yyyy'}}</button>
 
 		<button ng-click="showCurrentTime()">Now</button>
@@ -85,14 +86,14 @@
 				<div ui-slider="{orientation: 'vertical'}" data-min="0" data-max="24" data-step="0.5" use-decimals
 					data-tick ng-model="appTime.time" ng-model-options="{ getterSetter: true }" time-slider
 					zone-id="{{zone.zoneId}}" class="ui-slider ui-slider-vertical ui-widget-content ui-corner-all"
-					style="height: 350px; " ng-change="stopTicking()">
+					style="height: 350px; " ng-change="stopTicking();zonesChanged();">
 				</div>
 			</div>
 			<div class="zoneSliderContainerHorizontal">
 				<div ui-slider="{orientation: 'horizontal'}" data-min="0" data-max="24" data-step="2" use-decimals
 					data-tick ng-model="appTime.time" ng-model-options="{ getterSetter: true }" time-slider
 					zone-id="{{zone.zoneId}}" class="ui-slider ui-slider-horizontal ui-widget-content ui-corner-all"
-					ng-change="stopTicking()">
+					ng-change="stopTicking();zonesChanged();">
 				</div>
 			</div>
 		</div>
