@@ -63,13 +63,13 @@
 			ng-change='zonesChanged()'
 			class="topButton">{{appTime.date()._d | date:'MMMM d, yyyy'}}</button>
 
-		<button ng-click="showCurrentTime()">Now</button>
+		<button ng-click="showCurrentTime();zonesChanged();">Now</button>
 
 		<input type="text" ng-model="search" uib-typeahead="zone for zone in locations | filter:$viewValue | limitTo:25"
 			typeahead-on-select="onSelect($item, $model, $label, $event)" placeholder="Add city"
 			class="topButton" />
 
-		<button ng-click="clearTimeZones()" class="topButton">Remove all</button>
+		<button ng-click="clearTimeZones();zonesChanged();" class="topButton">Remove all</button>
 	</span>
 
 	<div class="allZonesContainer">
