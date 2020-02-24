@@ -74,7 +74,8 @@
 
 	<div class="allZonesContainer">
 		<div ng-repeat="zone in zones | orderBy:comparatorTimezone" class="zoneContainer"
-			ng-class="{selected : zone.zoneId === userZone.zoneId, blinked:zone.zoneId === blinkedZone.zoneId}">
+			ng-class="{selected : zone.zoneId === userZone.zoneId, 
+				blinked: isBlinkingZone(zone)}">
 			<a href="#" editable-text="zone.label" onaftersave="saveZones()" xeditable-Delete delete-text="Delete"
 				delete-callback="deleteZone('{{zone.zoneId}}');" class="zoneName">{{zone.label}}</a>
 			<div class="zoneTime">{{appTime.time() | toZoneTime:zone.zoneId:'HH:mm'}}</div>

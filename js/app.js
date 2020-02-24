@@ -27,6 +27,8 @@
 			$scope.comparatorTimezone = (zone) => $scope.timeIn($scope.appTime._time, zone.zoneId)._d.toISOString();
 			$scope.datepickerConfig = { dateFormat: 'MMM DD, YYYY', allowFuture: true };
 			$scope.zonesChanged = zonesChanged;
+			$scope.blinkedZones = [];
+			$scope.isBlinkingZone = isBlinkingZone;
 
 			$scope.locations = timeZonesService.getLocations();
 
@@ -96,8 +98,9 @@
 				}
 
 				addZone(urlData.zones
-					.filter((zoneFromUrl) => $scope.zones.findIndex((zone) => zone.zoneId == zoneFromUrl.id) < 0)
-					.map((filteredZone) => timeZonesService.getZoneByName(filteredZone.id))
+					.filter( (zoneFromUrl) => $scope.zones.findIndex((zone) => zone.zoneId == zoneFromUrl.id) < 0)
+					.map( (filteredZone) => timeZonesService.getZoneByName(filteredZone.id))
+					.map( (zone) => blinkZone(zone))
 				);
 
 			}
@@ -177,9 +180,34 @@
 			}
 
 			function blinkZone(zone) {
-				$scope.blinkedZone = zone;
-				$timeout(() => $scope.blinkedZone = undefined, 500);
+				$scope.blinkedZones.push(zone);
+				$timeout(() => 
+					$scope.blinkedZones.splice($scope.blinkedZones.findIndex((z)=>z.zoneId===zone.zoneId), 1)
+					, 2000);
+				return zone;
 			}
+
+			function isBlinkingZone(zone) {
+				return $scope.blinkedZones.find((z) => zone.zoneId === z.zoneId)
+			}
+
+			function ensureCurrentZoneIsVisible() {
+				var currentZone = timeZonesService.getDefaultZone();
+				if (!$scope.zones.find((zone) => zone.offsetInt == currentZone.offsetInt)) {
+					addZone(currentZone);
+				}
+			}
+
+			function calculateUserZone() {
+				var currentZone = timeZonesService.getDefaultZone();
+				var zoneIndex = $scope.zones.findIndex((zone) => zone.zoneId === currentZone.zoneId);
+				if (zoneIndex > 0) {
+					return $scope.zones[zoneIndex];
+				} else {
+					return $scope.zones.find((zone) => zone.offsetInt === currentZone.offsetInt);
+				}
+			}
+	
 
 			function configureWatchControl() {
 				window.CoolClock.prototype.refreshDisplay = function () {
@@ -286,24 +314,7 @@
 					}
 				};
 			}
-
-			function ensureCurrentZoneIsVisible() {
-				var currentZone = timeZonesService.getDefaultZone();
-				if (!$scope.zones.find((zone) => zone.offsetInt == currentZone.offsetInt)) {
-					addZone(currentZone);
-				}
-			}
-
-			function calculateUserZone() {
-				var currentZone = timeZonesService.getDefaultZone();
-				var zoneIndex = $scope.zones.findIndex((zone) => zone.zoneId === currentZone.zoneId);
-				if (zoneIndex > 0) {
-					return $scope.zones[zoneIndex];
-				} else {
-					return $scope.zones.find((zone) => zone.offsetInt === currentZone.offsetInt);
-				}
-			}
-		}
+	}
 	]);
 
 
