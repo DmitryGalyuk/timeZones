@@ -35,57 +35,55 @@
     margin: auto;
 }
 
+
 /* small screen */
 @media screen and (max-width: 750px) {
     .allZonesContainer {
         flex-direction: column;
     }
-
     .zoneContainer {
         grid-template-columns: max-content auto;
-        grid-template-areas:
-            'areaTime areaName'
-            'areaClock areaSlider';
+        grid-template-areas: 'areaTime areaName' 'areaClock areaSlider';
     }
-
     .zoneSliderContainerVertical {
         display: none;
     }
-
     .zoneSliderContainerHorizontal {
         display: block;
     }
 }
+
 
 /* big screen */
 @media screen and (min-width: 750px) {
     .allZonesContainer {
         flex-direction: row;
     }
-
     .zoneContainer {
-        grid-template-areas: 'areaName''areaTime''areaClock''areaSlider';
+        grid-template-areas: 'areaName' 'areaTime' 'areaClock' 'areaSlider';
         text-align: center;
     }
-
     .zoneSliderContainerVertical {
         display: block;
     }
-
     .zoneSliderContainerHorizontal {
         display: none;
     }
-
 }
 
 .editable-click, a.editable-click {
-        text-decoration: underline #428bca dashed;
-        border-bottom: none;
-        text-decoration-thickness: 1px;
-    }
+    text-decoration: underline #428bca dashed;
+    border-bottom: none;
+    text-decoration-thickness: 1px;
+}
+
+
+.ng-flat-datepicker {
+    width: unset;
+}
 
 .ng-flat-datepicker table tbody {
-    width: 290px;
+    width: 270px;
 }
 
 .topButtonsContainer .topButton {
@@ -94,4 +92,35 @@
 
 .topButtonsContainer {
     margin-bottom: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+    html, html * {
+        color: #eeeeee !important;
+        background-color: #292929 !important;
+    }
+    * {
+        border-color: #555555
+    }
+     :link, :link * {
+        color: #8db2e5 !important
+    }
+    input, textarea {
+        background-color: #333333 !important
+    }
+    a {
+        background-color: rgba(255, 255, 255, 0.01) !important
+    }
+    :visited, :visited * {
+        color: rgb(211, 138, 138) !important
+    }
+    html, html::before, body, body::before, input, select, button {
+        background-image: none !important
+    }
+    
+    .ng-flat-datepicker, .ng-flat-datepicker-custom-select-title, .selected {
+        border: 1px solid #555555;
+    }
+    .editable-wrap {
+        white-space: unset;
 }

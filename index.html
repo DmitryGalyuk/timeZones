@@ -5,6 +5,7 @@
 	<title>TimeZones Converter</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="UTF-8">
+	<meta name="color-scheme" content="dark light">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
 		integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -81,7 +82,7 @@
 			<div class="zoneTime">{{appTime.time() | toZoneTime:zone.zoneId:'HH:mm'}}</div>
 			<div class="zoneClock">
 				<canvas
-					class="CoolClock:swissRail{{isDaytime(timeIn(appTime.time(), zone.zoneId))?'':'OnBlack'}}:30::{{zone.offsetInt}}">
+					class="CoolClock:swissRail{{clockStyle(timeIn(appTime.time(), zone.zoneId))}}:30::{{zone.offsetInt}}">
 				</canvas>
 			</div>
 			<div class="zoneSliderContainerVertical">
@@ -92,7 +93,7 @@
 				</div>
 			</div>
 			<div class="zoneSliderContainerHorizontal">
-				<div ui-slider="{orientation: 'horizontal'}" data-min="0" data-max="24" data-step="2" use-decimals
+				<div ui-slider="{orientation: 'horizontal'}" data-min="0" data-max="24" data-step="1"
 					data-tick ng-model="appTime.time" ng-model-options="{ getterSetter: true }" time-slider
 					zone-id="{{zone.zoneId}}" class="ui-slider ui-slider-horizontal ui-widget-content ui-corner-all"
 					ng-change="stopTicking();zonesChanged();">

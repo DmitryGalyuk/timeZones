@@ -21,7 +21,7 @@
 			$scope.$on('$destroy', () => $scope.stopTicking());
 			$scope.onSelect = onZoneSelectedFromList;
 			$scope.showCurrentTime = () => $scope.startTicking();
-			$scope.isDaytime = timeZonesService.isDaytime;
+			$scope.clockStyle = clockStyle;
 			$scope.appTime = appTime;
 			$scope.timeIn = timeZonesService.timeIn;
 			$scope.comparatorTimezone = (zone) => $scope.timeIn($scope.appTime._time, zone.zoneId)._d.toISOString();
@@ -219,59 +219,36 @@
 				window.CoolClock.prototype.nextTick = function () { };
 
 				window.CoolClock.config.skins.swissRailOnBlack = {
-					outerBorder: {
-						lineWidth: 2,
-						radius: 95,
-						fillColor: 'black',
-						color: 'white',
-						alpha: 1
-					},
-					smallIndicator: {
-						lineWidth: 2,
-						startAt: 88,
-						endAt: 92,
-						color: 'white',
-						alpha: 1
-					},
-					largeIndicator: {
-						lineWidth: 4,
-						startAt: 79,
-						endAt: 92,
-						color: 'white',
-						alpha: 1
-					},
-					hourHand: {
-						lineWidth: 8,
-						startAt: -15,
-						endAt: 50,
-						color: 'white',
-						alpha: 1
-					},
-					minuteHand: {
-						lineWidth: 7,
-						startAt: -15,
-						endAt: 75,
-						color: 'white',
-						alpha: 1
-					},
-					secondHand: {
-						lineWidth: 5,
-						startAt: -10,
-						endAt: 85,
-						color: 'red',
-						alpha: 1
-					},
-					secondDecoration: {
-						lineWidth: 1,
-						startAt: 70,
-						radius: 4,
-						fillColor: 'red',
-						color: 'red',
-						alpha: 1
-					}
+					outerBorder: {lineWidth: 2, radius: 95, fillColor: 'black', color: 'white',  alpha: 1},
+					smallIndicator: {lineWidth: 2, startAt: 88, endAt: 92, color: 'white', alpha: 1},
+					largeIndicator: {lineWidth: 4, startAt: 79, endAt: 92, color: 'white', alpha: 1},
+					hourHand: {lineWidth: 8, startAt: -15, endAt: 50, color: 'white', alpha: 1},
+					minuteHand: {lineWidth: 7, startAt: -15, endAt: 75, color: 'white', alpha: 1},
+					secondHand: {lineWidth: 5, startAt: -10, endAt: 85, color: 'red', alpha: 1},
+					secondDecoration: {lineWidth: 1, startAt: 70, radius: 4, fillColor: 'red', color: 'red',alpha: 1}
 				};
 
+				window.CoolClock.config.skins.swissRailOnYellow = {
+					outerBorder: {lineWidth: 2, radius: 95, fillColor: 'LemonChiffon', color: 'black',  alpha: 1},
+					smallIndicator: {lineWidth: 2, startAt: 88, endAt: 92, color: 'black', alpha: 1},
+					largeIndicator: {lineWidth: 4, startAt: 79, endAt: 92, color: 'black', alpha: 1},
+					hourHand: {lineWidth: 8, startAt: -15, endAt: 50, color: 'black', alpha: 1},
+					minuteHand: {lineWidth: 7, startAt: -15, endAt: 75, color: 'black', alpha: 1},
+					secondHand: {lineWidth: 5, startAt: -10, endAt: 85, color: 'red', alpha: 1},
+					secondDecoration: {lineWidth: 1, startAt: 70, radius: 4, fillColor: 'red', color: 'red',alpha: 1}
+				};
+
+
 				$scope.$watch('appTime.time()', window.CoolClock.findAndCreateClocks);
+			}
+
+			function clockStyle(time) {
+				const isDay = timeZonesService.isDaytime(time);
+				const darkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+				if(!isDay) return "OnBlack";
+				if(isDay && darkTheme) return "OnYellow";
+				else return "";
 			}
 
 			function configureSlider() {
