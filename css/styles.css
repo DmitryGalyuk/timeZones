@@ -43,7 +43,9 @@
     }
     .zoneContainer {
         grid-template-columns: max-content auto;
-        grid-template-areas: 'areaTime areaName' 'areaClock areaSlider';
+        grid-template-areas: 
+            'areaTime areaName' 
+            'areaClock areaSlider';
     }
     .zoneSliderContainerVertical {
         display: none;
@@ -123,4 +125,5 @@
     }
     .editable-wrap {
         white-space: unset;
+    }
 }
