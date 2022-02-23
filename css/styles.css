@@ -60,6 +60,7 @@
 @media screen and (min-width: 750px) {
     .allZonesContainer {
         flex-direction: row;
+        flex-wrap: wrap;
     }
     .zoneContainer {
         grid-template-areas: 'areaName' 'areaTime' 'areaClock' 'areaSlider';

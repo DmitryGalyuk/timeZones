@@ -59,18 +59,18 @@
 
 <body>
 	<span class="topButtonsContainer">
-		<button ng-flat-datepicker ng-model="appTime.date" ng-model-options="{ getterSetter: true }"
-			datepicker-config="datepickerConfig" ng-click="stopTicking()"
-			ng-change='zonesChanged()'
-			class="topButton">{{appTime.date()._d | date:'MMMM d, yyyy'}}</button>
-
-		<button ng-click="showCurrentTime();zonesChanged();">Now</button>
-
 		<input type="text" ng-model="search" uib-typeahead="zone for zone in locations | filter:$viewValue | limitTo:25"
 			typeahead-on-select="onSelect($item, $model, $label, $event)" placeholder="Add city"
 			class="topButton" />
 
 		<button ng-click="clearTimeZones();zonesChanged();" class="topButton">Remove all</button>
+		
+		<button ng-flat-datepicker ng-model="appTime.date" ng-model-options="{ getterSetter: true }"
+			datepicker-config="datepickerConfig" ng-click="stopTicking()"
+			ng-change='zonesChanged()'
+			class="topButton">{{appTime.date()._d | date:'MMMM d, yyyy'}}</button>
+
+		<button ng-click="showCurrentTime();zonesChanged();" ng-disabled="isTicking">Current Time</button>
 	</span>
 
 	<div class="allZonesContainer">
